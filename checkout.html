@@ -405,6 +405,13 @@
     function genOrderId() { return 'AM-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substr(2,4).toUpperCase(); }
 
     async function placeOrder() {
+      await fetch("/api/telegram",{
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+          },
+      body: JSON.stringify(orderData)
+      });
       if (!validate()) { document.querySelector('.billing-card').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
       const btn = document.getElementById('placeOrderBtn');
       btn.classList.add('loading'); btn.disabled = true;
