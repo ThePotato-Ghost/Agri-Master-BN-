@@ -437,7 +437,8 @@
         status: 'pending',
         createdAt: window._serverTimestamp ? window._serverTimestamp() : new Date().toISOString(),
       };
-    try {
+   try {
+
   await fetch("/api/telegram",{
     method:"POST",
     headers:{
@@ -446,25 +447,16 @@
     body: JSON.stringify(orderData)
   });
 
-  if (window._db && window._addDoc && window._collection) {
-    await window._addDoc(window._collection(window._db, 'orders'), orderData);
-  } else {
-    console.log('📦 অর্ডার (Firebase কনফিগার করা হয়নি):', orderData);
-  }
-
-  document.getElementById('orderIdDisplay').textContent = 'অর্ডার আইডি: ' + orderId;
-  document.getElementById('successModal').classList.add('show');
-  document.body.style.overflow = 'hidden';
+  // ✅ THIS IS THE KEY PART
+  localStorage.setItem("lastOrder", JSON.stringify(orderData));
+  window.location.href = "order-complete.html";
 
 } catch (err) {
   console.error(err);
   alert('কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।');
   btn.classList.remove('loading');
   btn.disabled = false;
-  localStorage.setItem("lastOrder", JSON.stringify(orderData));
-  window.location.href = "/order-complete.html";
-}
-}
+} }
 
 window.placeOrder = placeOrder;
   </script>
