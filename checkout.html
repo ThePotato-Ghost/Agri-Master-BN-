@@ -461,6 +461,8 @@
   alert('কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।');
   btn.classList.remove('loading');
   btn.disabled = false;
+  localStorage.setItem("lastOrder", JSON.stringify(orderData));
+  window.location.href = "/order-complete.html";
 }
 }
 

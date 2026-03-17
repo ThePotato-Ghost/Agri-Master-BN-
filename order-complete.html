@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Order Complete</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f6f6f6;
+      padding: 20px;
+    }
+    .box {
+      max-width: 600px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    .success {
+      border: 2px dashed #7ac142;
+      padding: 15px;
+      text-align: center;
+      color: #5c9e2f;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    .row {
+      display: flex;
+      justify-content: space-between;
+      margin: 8px 0;
+    }
+    h3 {
+      margin-top: 25px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <div class="success">
+    Thank you. Your order has been received.
+  </div>
+
+  <div class="row"><span>Order ID:</span><span id="orderId"></span></div>
+  <div class="row"><span>Date:</span><span id="date"></span></div>
+  <div class="row"><span>Total:</span><span id="total"></span></div>
+  <div class="row"><span>Payment:</span><span>Cash on delivery</span></div>
+
+  <h3>Customer Info</h3>
+  <div id="customer"></div>
+
+</div>
+
+<script>
+  const data = JSON.parse(localStorage.getItem("lastOrder"));
+
+  if (data) {
+    document.getElementById("orderId").textContent = data.orderId;
+    document.getElementById("date").textContent = new Date().toLocaleDateString();
+    document.getElementById("total").textContent = "৳" + data.total;
+
+    document.getElementById("customer").innerHTML = `
+      ${data.customer.name}<br>
+      ${data.customer.phone}<br>
+      ${data.customer.address}<br>
+      ${data.customer.upazila}, ${data.customer.district}
+    `;
+  }
+</script>
+
+</body>
+</html>
