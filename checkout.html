@@ -170,6 +170,7 @@
     </button>
   </nav>
 
+  <!-- সাফল্য মোডাল -->
   <div class="modal-overlay" id="successModal">
     <div class="modal">
       <div class="modal-icon">🌾</div>
@@ -220,6 +221,7 @@
               <label>জেলা <span class="req">*</span></label>
               <select id="district">
                 <option value="">জেলা বেছে নিন</option>
+                <!-- ঢাকা বিভাগ -->
                 <optgroup label="ঢাকা বিভাগ">
                   <option>ঢাকা</option>
                   <option>গাজীপুর</option>
@@ -229,12 +231,13 @@
                   <option>মুন্সিগঞ্জ</option>
                   <option>কিশোরগঞ্জ</option>
                   <option>টাঙ্গাইল</option>
-                  <option>ফریدপুর</option>
+                  <option>ফরিদপুর</option>
                   <option>গোপালগঞ্জ</option>
                   <option>মাদারীপুর</option>
                   <option>রাজবাড়ী</option>
                   <option>শরীয়তপুর</option>
                 </optgroup>
+                <!-- চট্টগ্রাম বিভাগ -->
                 <optgroup label="চট্টগ্রাম বিভাগ">
                   <option>চট্টগ্রাম</option>
                   <option>কুমিল্লা</option>
@@ -248,6 +251,7 @@
                   <option>বান্দরবান</option>
                   <option>খাগড়াছড়ি</option>
                 </optgroup>
+                <!-- রাজশাহী বিভাগ -->
                 <optgroup label="রাজশাহী বিভাগ">
                   <option>রাজশাহী</option>
                   <option>বগুড়া</option>
@@ -258,6 +262,7 @@
                   <option>পাবনা</option>
                   <option>সিরাজগঞ্জ</option>
                 </optgroup>
+                <!-- খুলনা বিভাগ -->
                 <optgroup label="খুলনা বিভাগ">
                   <option>খুলনা</option>
                   <option>বাগেরহাট</option>
@@ -270,6 +275,7 @@
                   <option>নড়াইল</option>
                   <option>সাতক্ষীরা</option>
                 </optgroup>
+                <!-- বরিশাল বিভাগ -->
                 <optgroup label="বরিশাল বিভাগ">
                   <option>বরিশাল</option>
                   <option>বরগুনা</option>
@@ -278,12 +284,14 @@
                   <option>পটুয়াখালী</option>
                   <option>পিরোজপুর</option>
                 </optgroup>
+                <!-- সিলেট বিভাগ -->
                 <optgroup label="সিলেট বিভাগ">
                   <option>সিলেট</option>
                   <option>হবিগঞ্জ</option>
                   <option>মৌলভীবাজার</option>
                   <option>সুনামগঞ্জ</option>
                 </optgroup>
+                <!-- রংপুর বিভাগ -->
                 <optgroup label="রংপুর বিভাগ">
                   <option>রংপুর</option>
                   <option>দিনাজপুর</option>
@@ -294,6 +302,7 @@
                   <option>পঞ্চগড়</option>
                   <option>ঠাকুরগাঁও</option>
                 </optgroup>
+                <!-- ময়মনসিংহ বিভাগ -->
                 <optgroup label="ময়মনসিংহ বিভাগ">
                   <option>ময়মনসিংহ</option>
                   <option>জামালপুর</option>
@@ -309,6 +318,7 @@
             </div>
           </div>
 
+          <!-- Courier selector — only shown for outside-Dhaka districts -->
           <div class="form-group" id="courierGroup" style="display:none;">
             <label>কুরিয়ার সার্ভিস <span class="req">*</span></label>
             <select id="courierService">
@@ -342,6 +352,7 @@
                 <td>
                   <div class="product-name">এগ্রি মাস্টার</div>
                   <div class="product-meta">হার্ডকভার সংস্করণ</div>
+                  <!-- unit price with strikethrough -->
                   <div class="product-price-row">
                     <span class="price-original">৳ ৫৫০</span>
                     <span class="price-sale">৳ ৪৮০</span>
@@ -353,6 +364,7 @@
             </tbody>
           </table>
 
+          <!-- Quantity counter -->
           <div class="qty-row">
             <span class="qty-label">কপির সংখ্যা</span>
             <div class="qty-counter">
@@ -390,220 +402,29 @@
     <div class="footer-brand">এগ্রি <em>মাস্টার</em></div>
     <div class="footer-copy">© ২০২৫ কৃষিবিদ মো: ইমরান হোসেন<br>আদমজী ক্যান্টনমেন্ট কলেজ</div>
   </footer>
-<input type="text" name="company" id="company" style="display:none">
-
-  <footer>
-    <div class="footer-brand">এগ্রি <em>মাস্টার</em></div>
-    <div class="footer-copy">© ২০২৫ কৃষিবিদ মো: ইমরান হোসেন<br>আدمজী ক্যান্টনমেন্ট কলেজ</div>
-  </footer>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, doc, setDoc, runTransaction, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
-    // 🔧 Live Firebase App Credentials
+    // 🔧 আপনার Firebase Config এখানে বসান
     const firebaseConfig = {
-      apiKey: "AIzaSyCiMLE27Eh2eyF_qsBUp7ooVTVTaqVyss4",
-      authDomain: "agri-master-beta.firebaseapp.com",
-      projectId: "agri-master-beta",
-      storageBucket: "agri-master-beta.firebasestorage.app",
-      messagingSenderId: "207195518331",
-      appId: "1:207195518331:web:6db47c025b45085ebdb9de",
-      measurementId: "G-JSV6RTV580"
+      apiKey:            "YOUR_API_KEY",
+      authDomain:        "YOUR_PROJECT_ID.firebaseapp.com",
+      projectId:         "YOUR_PROJECT_ID",
+      storageBucket:     "YOUR_PROJECT_ID.appspot.com",
+      messagingSenderId: "YOUR_SENDER_ID",
+      appId:             "YOUR_APP_ID"
     };
 
     const app = initializeApp(firebaseConfig);
     const db  = getFirestore(app);
-
-    // Navigation Drawer Logic
-    const hamburger = document.getElementById('hamburger');
-    const drawer    = document.getElementById('navDrawer');
-    window.closeDrawer = function() { 
-      hamburger.classList.remove('open'); 
-      drawer.classList.remove('open'); 
-      document.body.style.overflow = ''; 
-    };
-    hamburger.addEventListener('click', () => { 
-      const isOpen = hamburger.classList.toggle('open'); 
-      drawer.classList.toggle('open', isOpen); 
-      document.body.style.overflow = isOpen ? 'hidden' : ''; 
-    });
-
-    const DHAKA_INSIDE = ['ঢাকা','নারায়ণগঞ্জ','গাজীপুর','নরসিংদী','মানিকগঞ্জ'];
-    const UNIT_PRICE = 480; 
-    let shippingCost = 0;
-    let qty = 1;
-
-    // Qty counter
-    window.changeQty = function(delta) {
-      qty = Math.max(1, Math.min(20, qty + delta));
-      document.getElementById('qtyDisplay').textContent = toBanglaNum(qty);
-      document.getElementById('qtyMinus').disabled = (qty <= 1);
-      document.getElementById('lineTotalCell').textContent = '৳ ' + toBanglaNum(UNIT_PRICE * qty);
-      document.getElementById('qtyNote').textContent = '(' + toBanglaNum(qty) + ' কপি)';
-      recalc();
-    };
-
-    function toBanglaNum(n) {
-      return String(n).replace(/[0-9]/g, d => '০১২৩৪৫৬৭৮৯'[d]);
-    }
-
-    function recalc() {
-      const subtotal = UNIT_PRICE * qty;
-      document.getElementById('subtotalAmt').textContent = '৳ ' + toBanglaNum(subtotal);
-      const grand = subtotal + shippingCost;
-      document.getElementById('totalAmt').textContent = '৳ ' + toBanglaNum(grand);
-    }
-
-    document.getElementById('district').addEventListener('change', function() {
-      const dist = this.value;
-      const courierGroup = document.getElementById('courierGroup');
-      if (!dist) {
-        shippingCost = 0;
-        document.getElementById('shippingTag').textContent = '—';
-        document.getElementById('shippingAmt').textContent = 'জেলা বেছে নিন';
-        courierGroup.style.display = 'none';
-        document.getElementById('courierService').value = '';
-        recalc();
-        return;
-      }
-      if (DHAKA_INSIDE.includes(dist)) {
-        shippingCost = 70;
-        document.getElementById('shippingTag').textContent = 'ঢাকার ভেতরে';
-        document.getElementById('shippingAmt').textContent = '৳ ' + toBanglaNum(70);
-        courierGroup.style.display = 'none';
-        document.getElementById('courierService').value = '';
-      } else {
-        shippingCost = 120;
-        document.getElementById('shippingTag').textContent = 'ঢাকার বাইরে';
-        document.getElementById('shippingAmt').textContent = '৳ ' + toBanglaNum(120);
-        courierGroup.style.display = '';
-      }
-      recalc();
-    });
-
-    document.getElementById('qtyMinus').disabled = true;
-
-    function validate() {
-      const fields = [
-        { id: 'fullName', check: v => v.trim().length >= 2 },
-        { id: 'phone',    check: v => /^(?:\+88)?01[3-9]\d{8}$/.test(v.replace(/\s/g,'')) },
-        { id: 'address',  check: v => v.trim().length >= 5 },
-        { id: 'district', check: v => v !== '' },
-      ];
-      let valid = true;
-      fields.forEach(f => {
-        const el = document.getElementById(f.id);
-        const err = document.getElementById(f.id + '-error');
-        if (!f.check(el.value)) { el.classList.add('error'); if(err) err.classList.add('show'); valid = false; }
-        else { el.classList.remove('error'); if(err) err.classList.remove('show'); }
-      });
-      return valid;
-    }
-
-    ['fullName','phone','address','district'].forEach(id => {
-      document.getElementById(id).addEventListener('input', function() { 
-        this.classList.remove('error'); 
-        const err = document.getElementById(id+'-error'); 
-        if(err) err.classList.remove('show'); 
-      });
-    });
-
-    function genOrderId() { 
-      return 'AM-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substr(2,4).toUpperCase(); 
-    }
-
-    // Main Submit Action
-    async function placeOrder() {
-      const honeypot = document.getElementById("company").value;
-      if (honeypot !== "") return;
-      
-      if (!validate()) { 
-        document.querySelector('.billing-card').scrollIntoView({ behavior: 'smooth', block: 'start' }); 
-        return; 
-      }
-      
-      const btn = document.getElementById('placeOrderBtn');
-      btn.classList.add('loading'); 
-      btn.disabled = true;
-      
-      const orderId = genOrderId();
-      const district = document.getElementById('district').value;
-      const subtotal = UNIT_PRICE * qty;
-      
-      const orderData = {
-        orderId: orderId,
-        product: 'এগ্রি মাস্টার — ',
-        unitPrice: UNIT_PRICE,
-        quantity: qty,
-        subtotal: subtotal,
-        shipping: shippingCost,
-        total: subtotal + shippingCost,
-        customer: {
-          name:     document.getElementById('fullName').value.trim(),
-          phone:    document.getElementById('phone').value.trim(),
-          address:  document.getElementById('address').value.trim(),
-          district: district,
-          upazila:  document.getElementById('upazila').value.trim(),
-          courier:  document.getElementById('courierService').value || 'প্রযোজ্য নয় (ঢাকার ভেতরে)',
-          notes:    document.getElementById('notes').value.trim(),
-        },
-        paymentMethod: 'ক্যাশ অন ডেলিভারি',
-        status: 'pending',
-        createdAt: new Date().toISOString()
-      };
-
-      try {
-        // 1. Firebase write directly into the orders collection
-        await addDoc(collection(db, "orders"), orderData);
-
-        // 2. Telegram request
-        await fetch("/api/telegram", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(orderData)
-        });
-
-        localStorage.setItem("lastOrder", JSON.stringify(orderData));
-        window.location.href = "order-complete.html";
-
-      } catch (err) {
-        // This will pop up a detailed error box on your mobile screen so you can read it!
-        alert('Error details: ' + err.message);
-        btn.classList.remove('loading');
-        btn.disabled = false;
-      } 
-    }
-
-    // Expose placeOrder globally so onclick="placeOrder()" works
-    window.placeOrder = placeOrder;
-  </script>
-</body>
-</html>
-
-  <script type="module">
-    // Using newer compatible v12 imports to match initialization setup seamlessly
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
-
-    // 🔧 Live Firebase App Credentials Loaded Successfully
-    const firebaseConfig = {
-      apiKey: "AIzaSyCiMLE27Eh2eyF_qsBUp7ooVTVTaqVyss4",
-      authDomain: "agri-master-beta.firebaseapp.com",
-      projectId: "agri-master-beta",
-      storageBucket: "agri-master-beta.firebasestorage.app",
-      messagingSenderId: "207195518331",
-      appId: "1:207195518331:web:6db47c025b45085ebdb9de",
-      measurementId: "G-JSV6RTV580"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db  = getFirestore(app);
-    
-    // Sharing references securely into context for native standard functions
-    window._db = db;
-    window._addDoc = addDoc;
-    window._collection = collection;
+    window._db             = db;
+    window._doc            = doc;
+    window._setDoc         = setDoc;
+    window._runTransaction = runTransaction;
+    window._collection     = collection;
+    window._serverTimestamp = serverTimestamp;
   </script>
 
   <script>
@@ -697,32 +518,24 @@
       document.getElementById(id).addEventListener('input', function() { this.classList.remove('error'); const err = document.getElementById(id+'-error'); if(err) err.classList.remove('show'); });
     });
 
-    function genOrderId() { return 'AM-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substr(2,4).toUpperCase(); }
-
     async function placeOrder() {
       const honeypot = document.getElementById("company").value;
-          
-      if (honeypot !== "") {
-        return;
-      }
+      if (honeypot !== "") return;
       if (!validate()) { document.querySelector('.billing-card').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
-      
+
       const btn = document.getElementById('placeOrderBtn');
-      btn.classList.add('loading'); 
-      btn.disabled = true;
-      
-      const orderId = genOrderId();
+      btn.classList.add('loading'); btn.disabled = true;
+
       const district = document.getElementById('district').value;
-      const subtotal = UNIT_PRICE * qty;
-      
+      const subtotal  = UNIT_PRICE * qty;
+
       const orderData = {
-        orderId,
-        product: 'এগ্রি মাস্টার — ',
-        unitPrice: UNIT_PRICE,
-        quantity: qty,
-        subtotal: subtotal,
-        shipping: shippingCost,
-        total: subtotal + shippingCost,
+        product:       'এগ্রি মাস্টার',
+        unitPrice:     UNIT_PRICE,
+        quantity:      qty,
+        subtotal:      subtotal,
+        shipping:      shippingCost,
+        total:         subtotal + shippingCost,
         customer: {
           name:     document.getElementById('fullName').value.trim(),
           phone:    document.getElementById('phone').value.trim(),
@@ -733,28 +546,45 @@
           notes:    document.getElementById('notes').value.trim(),
         },
         paymentMethod: 'ক্যাশ অন ডেলিভারি',
-        status: 'pending',
-        createdAt: new Date().toISOString(),
+        status:        'pending',
+        createdAt:     window._serverTimestamp ? window._serverTimestamp() : new Date().toISOString(),
       };
 
       try {
-        // 1. Save the order to your Firebase Firestore database securely
-        if (window._db && window._addDoc && window._collection) {
-          await window._addDoc(window._collection(window._db, "orders"), orderData);
-          console.log("Order successfully logged to Firestore!");
+        let orderId;
+
+        if (window._db && window._runTransaction && window._doc && window._setDoc) {
+          const db              = window._db;
+          const counterRef      = window._doc(db, 'meta', 'orderCounter');
+
+          // ── Atomic transaction: increment counter → write order with that number
+          orderId = await window._runTransaction(db, async (tx) => {
+            const counterSnap = await tx.get(counterRef);
+            const nextNum     = (counterSnap.exists() ? counterSnap.data().lastOrder : 0) + 1;
+            const newOrderId  = 'AM-' + String(nextNum).padStart(4, '0'); // e.g. AM-0001
+
+            const orderRef = window._doc(db, 'orders', newOrderId);
+            tx.set(counterRef, { lastOrder: nextNum });
+            tx.set(orderRef,   { ...orderData, orderId: newOrderId });
+
+            return newOrderId;
+          });
+
+        } else {
+          // Firebase not available — fallback (shouldn't happen in production)
+          orderId = 'AM-' + Date.now().toString(36).toUpperCase();
         }
 
-        // 2. Fire the existing webhook payload to your Telegram channel integration
+        const finalOrder = { ...orderData, orderId };
+
+        // ── Send to Telegram with the readable order ID
         await fetch("/api/telegram", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify(orderData)
+          method:  "POST",
+          headers: { "Content-Type": "application/json" },
+          body:    JSON.stringify(finalOrder)
         });
 
-        // 3. Save snapshot natively to localStorage and hand off path transition
-        localStorage.setItem("lastOrder", JSON.stringify(orderData));
+        localStorage.setItem("lastOrder", JSON.stringify(finalOrder));
         window.location.href = "order-complete.html";
 
       } catch (err) {
@@ -762,10 +592,10 @@
         alert('কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।');
         btn.classList.remove('loading');
         btn.disabled = false;
-      } 
+      }
     }
 
-    window.placeOrder = placeOrder;
+window.placeOrder = placeOrder;
   </script>
 </body>
 </html>
