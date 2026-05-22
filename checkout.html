@@ -170,7 +170,6 @@
     </button>
   </nav>
 
-  <!-- সাফল্য মোডাল -->
   <div class="modal-overlay" id="successModal">
     <div class="modal">
       <div class="modal-icon">🌾</div>
@@ -221,7 +220,6 @@
               <label>জেলা <span class="req">*</span></label>
               <select id="district">
                 <option value="">জেলা বেছে নিন</option>
-                <!-- ঢাকা বিভাগ -->
                 <optgroup label="ঢাকা বিভাগ">
                   <option>ঢাকা</option>
                   <option>গাজীপুর</option>
@@ -231,13 +229,12 @@
                   <option>মুন্সিগঞ্জ</option>
                   <option>কিশোরগঞ্জ</option>
                   <option>টাঙ্গাইল</option>
-                  <option>ফরিদপুর</option>
+                  <option>ফریدপুর</option>
                   <option>গোপালগঞ্জ</option>
                   <option>মাদারীপুর</option>
                   <option>রাজবাড়ী</option>
                   <option>শরীয়তপুর</option>
                 </optgroup>
-                <!-- চট্টগ্রাম বিভাগ -->
                 <optgroup label="চট্টগ্রাম বিভাগ">
                   <option>চট্টগ্রাম</option>
                   <option>কুমিল্লা</option>
@@ -251,7 +248,6 @@
                   <option>বান্দরবান</option>
                   <option>খাগড়াছড়ি</option>
                 </optgroup>
-                <!-- রাজশাহী বিভাগ -->
                 <optgroup label="রাজশাহী বিভাগ">
                   <option>রাজশাহী</option>
                   <option>বগুড়া</option>
@@ -262,7 +258,6 @@
                   <option>পাবনা</option>
                   <option>সিরাজগঞ্জ</option>
                 </optgroup>
-                <!-- খুলনা বিভাগ -->
                 <optgroup label="খুলনা বিভাগ">
                   <option>খুলনা</option>
                   <option>বাগেরহাট</option>
@@ -275,7 +270,6 @@
                   <option>নড়াইল</option>
                   <option>সাতক্ষীরা</option>
                 </optgroup>
-                <!-- বরিশাল বিভাগ -->
                 <optgroup label="বরিশাল বিভাগ">
                   <option>বরিশাল</option>
                   <option>বরগুনা</option>
@@ -284,14 +278,12 @@
                   <option>পটুয়াখালী</option>
                   <option>পিরোজপুর</option>
                 </optgroup>
-                <!-- সিলেট বিভাগ -->
                 <optgroup label="সিলেট বিভাগ">
                   <option>সিলেট</option>
                   <option>হবিগঞ্জ</option>
                   <option>মৌলভীবাজার</option>
                   <option>সুনামগঞ্জ</option>
                 </optgroup>
-                <!-- রংপুর বিভাগ -->
                 <optgroup label="রংপুর বিভাগ">
                   <option>রংপুর</option>
                   <option>দিনাজপুর</option>
@@ -302,7 +294,6 @@
                   <option>পঞ্চগড়</option>
                   <option>ঠাকুরগাঁও</option>
                 </optgroup>
-                <!-- ময়মনসিংহ বিভাগ -->
                 <optgroup label="ময়মনসিংহ বিভাগ">
                   <option>ময়মনসিংহ</option>
                   <option>জামালপুর</option>
@@ -318,7 +309,6 @@
             </div>
           </div>
 
-          <!-- Courier selector — only shown for outside-Dhaka districts -->
           <div class="form-group" id="courierGroup" style="display:none;">
             <label>কুরিয়ার সার্ভিস <span class="req">*</span></label>
             <select id="courierService">
@@ -352,7 +342,6 @@
                 <td>
                   <div class="product-name">এগ্রি মাস্টার</div>
                   <div class="product-meta">হার্ডকভার সংস্করণ</div>
-                  <!-- unit price with strikethrough -->
                   <div class="product-price-row">
                     <span class="price-original">৳ ৫৫০</span>
                     <span class="price-sale">৳ ৪৮০</span>
@@ -364,7 +353,6 @@
             </tbody>
           </table>
 
-          <!-- Quantity counter -->
           <div class="qty-row">
             <span class="qty-label">কপির সংখ্যা</span>
             <div class="qty-counter">
@@ -404,25 +392,28 @@
   </footer>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    // Using newer compatible v12 imports to match initialization setup seamlessly
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/12.13.0/firebase-firestore.js";
 
-    // 🔧 আপনার Firebase Config এখানে বসান
+    // 🔧 Live Firebase App Credentials Loaded Successfully
     const firebaseConfig = {
-      apiKey:            "YOUR_API_KEY",
-      authDomain:        "YOUR_PROJECT_ID.firebaseapp.com",
-      projectId:         "YOUR_PROJECT_ID",
-      storageBucket:     "YOUR_PROJECT_ID.appspot.com",
-      messagingSenderId: "YOUR_SENDER_ID",
-      appId:             "YOUR_APP_ID"
+      apiKey: "AIzaSyCiMLE27Eh2eyF_qsBUp7ooVTVTaqVyss4",
+      authDomain: "agri-master-beta.firebaseapp.com",
+      projectId: "agri-master-beta",
+      storageBucket: "agri-master-beta.firebasestorage.app",
+      messagingSenderId: "207195518331",
+      appId: "1:207195518331:web:6db47c025b45085ebdb9de",
+      measurementId: "G-JSV6RTV580"
     };
 
     const app = initializeApp(firebaseConfig);
     const db  = getFirestore(app);
+    
+    // Sharing references securely into context for native standard functions
     window._db = db;
     window._addDoc = addDoc;
     window._collection = collection;
-    window._serverTimestamp = serverTimestamp;
   </script>
 
   <script>
@@ -519,17 +510,21 @@
     function genOrderId() { return 'AM-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substr(2,4).toUpperCase(); }
 
     async function placeOrder() {
-      const honeypot = document.getElementById("company").value
+      const honeypot = document.getElementById("company").value;
           
       if (honeypot !== "") {
-        return
+        return;
       }
       if (!validate()) { document.querySelector('.billing-card').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+      
       const btn = document.getElementById('placeOrderBtn');
-      btn.classList.add('loading'); btn.disabled = true;
+      btn.classList.add('loading'); 
+      btn.disabled = true;
+      
       const orderId = genOrderId();
       const district = document.getElementById('district').value;
       const subtotal = UNIT_PRICE * qty;
+      
       const orderData = {
         orderId,
         product: 'এগ্রি মাস্টার — ',
@@ -549,30 +544,38 @@
         },
         paymentMethod: 'ক্যাশ অন ডেলিভারি',
         status: 'pending',
-        createdAt: window._serverTimestamp ? window._serverTimestamp() : new Date().toISOString(),
+        createdAt: new Date().toISOString(),
       };
-   try {
 
-  await fetch("/api/telegram",{
-    method:"POST",
-    headers:{
-      "Content-Type":"application/json"
-    },
-    body: JSON.stringify(orderData)
-  });
+      try {
+        // 1. Save the order to your Firebase Firestore database securely
+        if (window._db && window._addDoc && window._collection) {
+          await window._addDoc(window._collection(window._db, "orders"), orderData);
+          console.log("Order successfully logged to Firestore!");
+        }
 
-  // ✅ THIS IS THE KEY PART
-  localStorage.setItem("lastOrder", JSON.stringify(orderData));
-  window.location.href = "order-complete.html";
+        // 2. Fire the existing webhook payload to your Telegram channel integration
+        await fetch("/api/telegram", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(orderData)
+        });
 
-} catch (err) {
-  console.error(err);
-  alert('কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।');
-  btn.classList.remove('loading');
-  btn.disabled = false;
-} }
+        // 3. Save snapshot natively to localStorage and hand off path transition
+        localStorage.setItem("lastOrder", JSON.stringify(orderData));
+        window.location.href = "order-complete.html";
 
-window.placeOrder = placeOrder;
+      } catch (err) {
+        console.error(err);
+        alert('কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+        btn.classList.remove('loading');
+        btn.disabled = false;
+      } 
+    }
+
+    window.placeOrder = placeOrder;
   </script>
 </body>
 </html>
