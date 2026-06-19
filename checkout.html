@@ -133,6 +133,32 @@
     .footer-brand em { color: var(--wheat); }
     .footer-copy { font-family: 'Tiro Bangla', serif; font-size: 0.75rem; color: rgba(200,169,110,0.3); text-align: right; line-height: 1.9; }
 
+    /* ── Admin Panel ── */
+    .admin-fab { position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 3000; background: var(--gold); color: var(--ink); border: none; border-radius: 50%; width: 52px; height: 52px; font-size: 1.4rem; cursor: pointer; box-shadow: 0 4px 16px rgba(0,0,0,0.25); display: none; align-items: center; justify-content: center; transition: background 0.2s, transform 0.2s; }
+    .admin-fab:hover { background: #e8b800; transform: scale(1.08); }
+    .admin-panel { position: fixed; bottom: 4.5rem; right: 1.5rem; z-index: 3000; background: #fff; border: 1px solid rgba(74,53,32,0.15); box-shadow: 0 8px 32px rgba(0,0,0,0.18); width: 300px; display: none; flex-direction: column; }
+    .admin-panel.open { display: flex; }
+    .admin-panel-header { background: var(--soil); color: var(--straw); padding: 1rem 1.2rem; font-family: 'Tiro Bangla', serif; font-size: 0.82rem; font-weight: 700; letter-spacing: 0.1em; display: flex; justify-content: space-between; align-items: center; }
+    .admin-panel-header span { font-size: 0.7rem; color: var(--gold); font-style: italic; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 160px; }
+    .admin-panel-body { padding: 1.2rem; display: flex; flex-direction: column; gap: 1rem; }
+    .admin-field label { display: block; font-family: 'Tiro Bangla', serif; font-size: 0.75rem; font-weight: 600; color: var(--earth); margin-bottom: 0.3rem; }
+    .admin-field input { width: 100%; background: var(--fog); border: 1px solid rgba(74,53,32,0.2); padding: 0.55rem 0.8rem; font-family: 'Tiro Bangla', serif; font-size: 0.9rem; color: var(--soil); outline: none; }
+    .admin-field input:focus { border-color: var(--wheat); }
+    .admin-save-btn { background: var(--wheat); color: #fff; border: none; padding: 0.75rem; font-family: 'Tiro Bangla', serif; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: background 0.2s; }
+    .admin-save-btn:hover { background: #1f6b2c; }
+    .admin-save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .admin-status { font-family: 'Tiro Bangla', serif; font-size: 0.75rem; text-align: center; min-height: 1.2rem; color: var(--wheat); }
+    .admin-status.error { color: #c0392b; }
+
+    /* ── Google Sign-in button in nav ── */
+    .nav-google-btn { background: none; border: 1px solid rgba(200,169,110,0.35); color: var(--cream); padding: 0.35rem 0.9rem; font-family: 'Tiro Bangla', serif; font-size: 0.78rem; cursor: pointer; display: flex; align-items: center; gap: 0.5rem; transition: border-color 0.2s, background 0.2s; border-radius: 2px; white-space: nowrap; }
+    .nav-google-btn:hover { border-color: var(--gold); background: rgba(245,197,24,0.08); }
+    .nav-google-btn img { width: 14px; height: 14px; }
+    .nav-user-info { display: flex; align-items: center; gap: 0.6rem; }
+    .nav-user-avatar { width: 28px; height: 28px; border-radius: 50%; border: 1.5px solid var(--gold); object-fit: cover; }
+    .nav-signout-btn { background: none; border: none; color: rgba(200,169,110,0.5); font-family: 'Tiro Bangla', serif; font-size: 0.72rem; cursor: pointer; padding: 0; transition: color 0.2s; }
+    .nav-signout-btn:hover { color: var(--gold); }
+
     @media(max-width: 768px) {
       nav { padding: 0 1.2rem; }
       .nav-links { display: none; }
@@ -165,6 +191,16 @@
       <li><a href="about.html">লেখক পরিচিতি</a></li>
       <li><a href="checkout.html" class="nav-buy-btn">বই কিনুন</a></li>
     </ul>
+    <div id="navAuthArea" style="display:flex;align-items:center;gap:0.8rem;">
+      <button class="nav-google-btn" id="googleSignInBtn" style="display:none;" onclick="googleSignIn()">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google"/>
+        সাইন ইন
+      </button>
+      <div class="nav-user-info" id="navUserInfo" style="display:none;">
+        <img class="nav-user-avatar" id="navAvatar" src="" alt=""/>
+        <button class="nav-signout-btn" onclick="googleSignOut()">সাইন আউট</button>
+      </div>
+    </div>
     <button class="nav-hamburger" id="hamburger" aria-label="মেনু">
       <span></span><span></span><span></span>
     </button>
@@ -398,14 +434,42 @@
   </div>
   <input type="text" name="company" id="company" style="display:none">
 
+  <!-- Admin FAB + Panel -->
+  <button class="admin-fab" id="adminFab" title="অ্যাডমিন প্যানেল" onclick="toggleAdminPanel()">⚙️</button>
+  <div class="admin-panel" id="adminPanel">
+    <div class="admin-panel-header">
+      অ্যাডমিন প্যানেল
+      <span id="adminUserEmail"></span>
+    </div>
+    <div class="admin-panel-body">
+      <div class="admin-field">
+        <label>বইয়ের মূল্য (৳)</label>
+        <input type="number" id="adminBookPrice" placeholder="৪৮০" min="1"/>
+      </div>
+      <div class="admin-field">
+        <label>ডেলিভারি — ঢাকার ভেতরে (৳)</label>
+        <input type="number" id="adminShipDhaka" placeholder="৭০" min="0"/>
+      </div>
+      <div class="admin-field">
+        <label>ডেলিভারি — ঢাকার বাইরে (৳)</label>
+        <input type="number" id="adminShipOutside" placeholder="১২০" min="0"/>
+      </div>
+      <button class="admin-save-btn" id="adminSaveBtn" onclick="adminSavePrices()">সংরক্ষণ করুন</button>
+      <div class="admin-status" id="adminStatus"></div>
+    </div>
+  </div>
+
   <footer>
     <div class="footer-brand">এগ্রি <em>মাস্টার</em></div>
     <div class="footer-copy">© ২০২৫ কৃষিবিদ মো: ইমরান হোসেন<br>আদমজী ক্যান্টনমেন্ট কলেজ</div>
   </footer>
 
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getFirestore, collection, doc, setDoc, runTransaction, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { initializeApp }                                          from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp,
+             doc, getDoc, setDoc }                                    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut,
+             onAuthStateChanged }                                      from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
     // 🔧 আপনার Firebase Config এখানে বসান
     const firebaseConfig = {
@@ -417,14 +481,108 @@
       appId:             "YOUR_APP_ID"
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db  = getFirestore(app);
-    window._db             = db;
-    window._doc            = doc;
-    window._setDoc         = setDoc;
-    window._runTransaction = runTransaction;
-    window._collection     = collection;
+    const app      = initializeApp(firebaseConfig);
+    const db       = getFirestore(app);
+    const auth     = getAuth(app);
+    const provider = new GoogleAuthProvider();
+
+    // ── Expose Firestore helpers for placeOrder()
+    window._db              = db;
+    window._addDoc          = addDoc;
+    window._collection      = collection;
     window._serverTimestamp = serverTimestamp;
+
+    // ── Load prices from Firestore on page load
+    async function loadPrices() {
+      try {
+        const snap = await getDoc(doc(db, 'settings', 'pricing'));
+        if (snap.exists()) {
+          const d = snap.data();
+          if (d.bookPrice)    window.LIVE_UNIT_PRICE   = d.bookPrice;
+          if (d.shipDhaka)    window.LIVE_SHIP_DHAKA   = d.shipDhaka;
+          if (d.shipOutside)  window.LIVE_SHIP_OUTSIDE = d.shipOutside;
+          window._applyLivePrices();
+        }
+      } catch(e) { console.warn('Could not load prices:', e); }
+    }
+
+    // ── Google Sign-In / Out
+    window.googleSignIn = async () => {
+      try { await signInWithPopup(auth, provider); }
+      catch(e) { console.error(e); }
+    };
+    window.googleSignOut = async () => {
+      await signOut(auth);
+    };
+
+    // ── Admin: save prices to Firestore
+    window.adminSavePrices = async () => {
+      const btn    = document.getElementById('adminSaveBtn');
+      const status = document.getElementById('adminStatus');
+      const bp     = parseInt(document.getElementById('adminBookPrice').value);
+      const sd     = parseInt(document.getElementById('adminShipDhaka').value);
+      const so     = parseInt(document.getElementById('adminShipOutside').value);
+      if (isNaN(bp) || isNaN(sd) || isNaN(so) || bp < 1 || sd < 0 || so < 0) {
+        status.textContent = 'সব ঘর সঠিকভাবে পূরণ করুন।';
+        status.className = 'admin-status error';
+        return;
+      }
+      btn.disabled = true;
+      status.textContent = 'সংরক্ষণ হচ্ছে…';
+      status.className = 'admin-status';
+      try {
+        await setDoc(doc(db, 'settings', 'pricing'), { bookPrice: bp, shipDhaka: sd, shipOutside: so });
+        window.LIVE_UNIT_PRICE   = bp;
+        window.LIVE_SHIP_DHAKA   = sd;
+        window.LIVE_SHIP_OUTSIDE = so;
+        window._applyLivePrices();
+        status.textContent = '✓ সফলভাবে সংরক্ষিত হয়েছে!';
+        status.className = 'admin-status';
+      } catch(e) {
+        status.textContent = 'সমস্যা হয়েছে। আবার চেষ্টা করুন।';
+        status.className = 'admin-status error';
+      }
+      btn.disabled = false;
+    };
+
+    // ── Auth state: show/hide UI
+    onAuthStateChanged(auth, async (user) => {
+      const signInBtn  = document.getElementById('googleSignInBtn');
+      const userInfo   = document.getElementById('navUserInfo');
+      const avatar     = document.getElementById('navAvatar');
+      const fab        = document.getElementById('adminFab');
+
+      if (user) {
+        signInBtn.style.display  = 'none';
+        userInfo.style.display   = 'flex';
+        avatar.src               = user.photoURL || '';
+
+        // Check if admin
+        try {
+          const adminSnap = await getDoc(doc(db, 'settings', 'admins'));
+          const admins    = adminSnap.exists() ? (adminSnap.data().emails || []) : [];
+          if (admins.includes(user.email)) {
+            fab.style.display = 'flex';
+            document.getElementById('adminUserEmail').textContent = user.email;
+            // Pre-fill current prices
+            document.getElementById('adminBookPrice').value  = window.LIVE_UNIT_PRICE   || '';
+            document.getElementById('adminShipDhaka').value  = window.LIVE_SHIP_DHAKA   || '';
+            document.getElementById('adminShipOutside').value = window.LIVE_SHIP_OUTSIDE || '';
+          }
+        } catch(e) { console.warn('Admin check failed:', e); }
+      } else {
+        signInBtn.style.display  = 'flex';
+        userInfo.style.display   = 'none';
+        fab.style.display        = 'none';
+        document.getElementById('adminPanel').classList.remove('open');
+      }
+    });
+
+    // Show sign-in button initially (auth hasn't loaded yet)
+    document.getElementById('googleSignInBtn').style.display = 'flex';
+
+    // Load live prices
+    loadPrices();
   </script>
 
   <script>
@@ -434,18 +592,42 @@
     hamburger.addEventListener('click', () => { const isOpen = hamburger.classList.toggle('open'); drawer.classList.toggle('open', isOpen); document.body.style.overflow = isOpen ? 'hidden' : ''; });
 
     const DHAKA_INSIDE = ['ঢাকা','নারায়ণগঞ্জ','গাজীপুর','নরসিংদী','মানিকগঞ্জ'];
-    const UNIT_PRICE = 480;   // sale price per copy
+
+    // ── Default prices (overridden by Firestore values)
+    window.LIVE_UNIT_PRICE   = 480;
+    window.LIVE_SHIP_DHAKA   = 70;
+    window.LIVE_SHIP_OUTSIDE = 120;
+
     let shippingCost = 0;
     let qty = 1;
+
+    // ── Apply live prices to the UI (called on load and after admin saves)
+    window._applyLivePrices = function() {
+      const p = window.LIVE_UNIT_PRICE;
+      document.getElementById('lineTotalCell').textContent = '৳ ' + toBanglaNum(p * qty);
+      // Update sale price display
+      const saleEl = document.querySelector('.price-sale');
+      if (saleEl) saleEl.textContent = '৳ ' + toBanglaNum(p);
+      // Re-trigger district to update shipping display if a district is selected
+      const dist = document.getElementById('district').value;
+      if (dist) {
+        if (DHAKA_INSIDE.includes(dist)) {
+          shippingCost = window.LIVE_SHIP_DHAKA;
+          document.getElementById('shippingAmt').textContent = '৳ ' + toBanglaNum(shippingCost);
+        } else {
+          shippingCost = window.LIVE_SHIP_OUTSIDE;
+          document.getElementById('shippingAmt').textContent = '৳ ' + toBanglaNum(shippingCost);
+        }
+      }
+      recalc();
+    };
 
     // ── Qty counter
     function changeQty(delta) {
       qty = Math.max(1, Math.min(20, qty + delta));
       document.getElementById('qtyDisplay').textContent = toBanglaNum(qty);
       document.getElementById('qtyMinus').disabled = (qty <= 1);
-      // update line total in table
-      document.getElementById('lineTotalCell').textContent = '৳ ' + toBanglaNum(UNIT_PRICE * qty);
-      // update note
+      document.getElementById('lineTotalCell').textContent = '৳ ' + toBanglaNum(window.LIVE_UNIT_PRICE * qty);
       document.getElementById('qtyNote').textContent = '(' + toBanglaNum(qty) + ' কপি)';
       recalc();
     }
@@ -457,7 +639,7 @@
 
     // ── Recalculate all totals
     function recalc() {
-      const subtotal = UNIT_PRICE * qty;
+      const subtotal = window.LIVE_UNIT_PRICE * qty;
       document.getElementById('subtotalAmt').textContent = '৳ ' + toBanglaNum(subtotal);
       const grand = subtotal + shippingCost;
       document.getElementById('totalAmt').textContent = '৳ ' + toBanglaNum(grand);
@@ -477,19 +659,24 @@
         return;
       }
       if (DHAKA_INSIDE.includes(dist)) {
-        shippingCost = 70;
+        shippingCost = window.LIVE_SHIP_DHAKA;
         document.getElementById('shippingTag').textContent = 'ঢাকার ভেতরে';
-        document.getElementById('shippingAmt').textContent = '৳ ' + toBanglaNum(70);
+        document.getElementById('shippingAmt').textContent = '৳ ' + toBanglaNum(shippingCost);
         courierGroup.style.display = 'none';
         document.getElementById('courierService').value = '';
       } else {
-        shippingCost = 120;
+        shippingCost = window.LIVE_SHIP_OUTSIDE;
         document.getElementById('shippingTag').textContent = 'ঢাকার বাইরে';
-        document.getElementById('shippingAmt').textContent = '৳ ' + toBanglaNum(120);
+        document.getElementById('shippingAmt').textContent = '৳ ' + toBanglaNum(shippingCost);
         courierGroup.style.display = '';
       }
       recalc();
     });
+
+    // ── Admin panel toggle
+    window.toggleAdminPanel = function() {
+      document.getElementById('adminPanel').classList.toggle('open');
+    };
 
     // ── Expose changeQty globally
     window.changeQty = changeQty;
@@ -518,24 +705,25 @@
       document.getElementById(id).addEventListener('input', function() { this.classList.remove('error'); const err = document.getElementById(id+'-error'); if(err) err.classList.remove('show'); });
     });
 
-    async function placeOrder() {
-      const honeypot = document.getElementById("company").value;
-      if (honeypot !== "") return;
-      if (!validate()) { document.querySelector('.billing-card').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
+    function genOrderId() { return 'AM-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substr(2,4).toUpperCase(); }
 
+    async function placeOrder() {
+      const honeypot = document.getElementById("company").value
+      if (honeypot !== "") { return; }
+      if (!validate()) { document.querySelector('.billing-card').scrollIntoView({ behavior: 'smooth', block: 'start' }); return; }
       const btn = document.getElementById('placeOrderBtn');
       btn.classList.add('loading'); btn.disabled = true;
-
+      const orderId = genOrderId();
       const district = document.getElementById('district').value;
-      const subtotal  = UNIT_PRICE * qty;
-
+      const subtotal = window.LIVE_UNIT_PRICE * qty;
       const orderData = {
-        product:       'এগ্রি মাস্টার',
-        unitPrice:     UNIT_PRICE,
-        quantity:      qty,
-        subtotal:      subtotal,
-        shipping:      shippingCost,
-        total:         subtotal + shippingCost,
+        orderId,
+        product: 'এগ্রি মাস্টার — ',
+        unitPrice: window.LIVE_UNIT_PRICE,
+        quantity: qty,
+        subtotal: subtotal,
+        shipping: shippingCost,
+        total: subtotal + shippingCost,
         customer: {
           name:     document.getElementById('fullName').value.trim(),
           phone:    document.getElementById('phone').value.trim(),
@@ -546,47 +734,17 @@
           notes:    document.getElementById('notes').value.trim(),
         },
         paymentMethod: 'ক্যাশ অন ডেলিভারি',
-        status:        'pending',
-        createdAt:     window._serverTimestamp ? window._serverTimestamp() : new Date().toISOString(),
+        status: 'pending',
+        createdAt: window._serverTimestamp ? window._serverTimestamp() : new Date().toISOString(),
       };
-
       try {
-        let orderId;
-
-        if (window._db && window._runTransaction && window._doc && window._setDoc) {
-          const db              = window._db;
-          const counterRef      = window._doc(db, 'meta', 'orderCounter');
-
-          // ── Atomic transaction: increment counter → write order with that number
-          orderId = await window._runTransaction(db, async (tx) => {
-            const counterSnap = await tx.get(counterRef);
-            const nextNum     = (counterSnap.exists() ? counterSnap.data().lastOrder : 0) + 1;
-            const newOrderId  = 'AM-' + String(nextNum).padStart(4, '0'); // e.g. AM-0001
-
-            const orderRef = window._doc(db, 'orders', newOrderId);
-            tx.set(counterRef, { lastOrder: nextNum });
-            tx.set(orderRef,   { ...orderData, orderId: newOrderId });
-
-            return newOrderId;
-          });
-
-        } else {
-          // Firebase not available — fallback (shouldn't happen in production)
-          orderId = 'AM-' + Date.now().toString(36).toUpperCase();
-        }
-
-        const finalOrder = { ...orderData, orderId };
-
-        // ── Send to Telegram with the readable order ID
         await fetch("/api/telegram", {
-          method:  "POST",
+          method: "POST",
           headers: { "Content-Type": "application/json" },
-          body:    JSON.stringify(finalOrder)
+          body: JSON.stringify(orderData)
         });
-
-        localStorage.setItem("lastOrder", JSON.stringify(finalOrder));
+        localStorage.setItem("lastOrder", JSON.stringify(orderData));
         window.location.href = "order-complete.html";
-
       } catch (err) {
         console.error(err);
         alert('কিছু একটা সমস্যা হয়েছে। আবার চেষ্টা করুন।');
@@ -595,7 +753,7 @@
       }
     }
 
-window.placeOrder = placeOrder;
+    window.placeOrder = placeOrder;
   </script>
 </body>
 </html>
